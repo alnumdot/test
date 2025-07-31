@@ -39,3 +39,29 @@
 
 # debug information files
 *.dwo
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/r6_dll.lastbuildstate
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/link.write.1.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/link.secondary.1.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/link.read.1.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/link.command.1.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/CL.write.1.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/CL.read.1.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/Cl.items.tlog
+r6_dll/r6_dll/x64/Release/r6_dll.tlog/CL.command.1.tlog
+r6_dll/.vs/r6_dll/v17/ipch/b643a57c36b463f.ipch
+r6_dll/.vs/r6_dll/v17/ipch/AutoPCH/cf088ac686538e87/MAIN.ipch
+r6_dll/.vs/r6_dll/v17/ipch/AutoPCH/8990efcc3eaa1fdc/MATH.ipch
+r6_dll/.vs/r6_dll/v17/ipch/AutoPCH/1ae462608b47111c/CLASSES.ipch
+r6_dll/.vs/r6_dll/v17/ipch/AutoPCH/11d9a9addf8267f2/CACHE.ipch
+r6_dll/.vs/r6_dll/v17/DocumentLayout.json
+r6_dll/.vs/r6_dll/v17/DocumentLayout.backup.json
+r6_dll/.vs/r6_dll/v17/Browse.VC.opendb
+r6_dll/.vs/r6_dll/v17/Browse.VC.db-wal
+r6_dll/.vs/r6_dll/v17/Browse.VC.db-shm
+r6_dll/.vs/r6_dll/v17/Browse.VC.db
+r6_dll/.vs/r6_dll/v17/.suo
+r6_dll/x64/Release/config.txt
+r6_dll/r6_dll/x64/Release/r6_dll.log
+r6_dll/r6_dll/x64/Release/r6_dll.ipdb
+r6_dll/r6_dll/x64/Release/r6_dll.iobj
+r6_dll/r6_dll/x64/Release/r6_dll.dll.recipe
