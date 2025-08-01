@@ -27,15 +27,16 @@ void main() {
 
             if (!actor) continue;
 
-            //if (actor->is_actor_player()) {
+            if (actor->is_actor_player()) {
                 auto pos = actor->get_actor_position();
                 printf("Position: X=%.2f, Y=%.2f, Z=%.2f\n", pos.x, pos.y, pos.z);
-            //}
+            }
         }
         Sleep(50);
     }
     printf("end\n");
 }
+
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {

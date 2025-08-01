@@ -13,6 +13,32 @@ namespace offset
     inline constexpr unsigned char actor_mov_instruction[3] = { 0x4C, 0x89, 0x2D };
 };
 
+
+DWORD GetProcessIdByName(const std::wstring& processName)
+{
+    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnapshot == INVALID_HANDLE_VALUE)
+        return 0;
+
+    PROCESSENTRY32 pe;
+    pe.dwSize = sizeof(PROCESSENTRY32);
+
+    if (Process32First(hSnapshot, &pe))
+    {
+        do
+        {
+            if (wcscmp(pe.szExeFile, processName.c_str()) == 0)
+            {
+                CloseHandle(hSnapshot);
+                return pe.th32ProcessID;
+            }
+        } while (Process32Next(hSnapshot, &pe));
+    }
+
+    CloseHandle(hSnapshot);
+    return 0;
+}
+
 void c_cache::setup_camera()
 {
     const auto patch_address = g_module + offset::camera_patch_address;
@@ -21,7 +47,7 @@ void c_cache::setup_camera()
     int rel_offset = static_cast<int>(codecave_address - (patch_address + 7));
 
     unsigned char patch[8] = {
-        0x48, 0x89, 0x15, // camera pointer should always be stored inside RDX register (even on all builds)
+        0x48, 0x89, 0x15,
         static_cast<unsigned char>(rel_offset & 0xFF),
         static_cast<unsigned char>((rel_offset >> 8) & 0xFF),
         static_cast<unsigned char>((rel_offset >> 16) & 0xFF),
@@ -29,10 +55,45 @@ void c_cache::setup_camera()
         0x90
     };
 
+    DWORD processId = GetProcessIdByName(L"RainbowSix.exe");
+    if (!processId) {
+        std::cout << "Process not found" << std::endl;
+        return;
+    }
+
+    HANDLE hProcess = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE,
+        FALSE, processId);
+    if (!hProcess) {
+        std::cout << "Failed to open process: " << GetLastError() << std::endl;
+        return;
+    }
+
     DWORD old_protect;
-    VirtualProtect((LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect);
-    memcpy((void*)patch_address, patch, sizeof(patch));
-    VirtualProtect((LPVOID)patch_address, sizeof(patch), old_protect, &old_protect);
+    if (!VirtualProtectEx(hProcess, (LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect)) {
+        std::cout << "VirtualProtectEx failed: " << GetLastError() << std::endl;
+        CloseHandle(hProcess);
+        return;
+    }
+
+    SIZE_T bytesWritten;
+    if (!WriteProcessMemory(hProcess, (LPVOID)patch_address, patch, sizeof(patch), &bytesWritten)) {
+        std::cout << "WriteProcessMemory failed: " << GetLastError() << std::endl;
+        CloseHandle(hProcess);
+        return;
+    }
+
+    VirtualProtectEx(hProcess, (LPVOID)patch_address, sizeof(patch), old_protect, &old_protect);
+
+    CloseHandle(hProcess);
+
+    //DWORD old_protect;
+    //VirtualProtect((LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect);
+    //if (!VirtualProtect((LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect)) {
+    //    std::cout << "VirtualProtect failed: " << GetLastError() << std::endl;
+    //    return;
+    //}
+    //memcpy((void*)patch_address, patch, sizeof(patch));
+    //VirtualProtect((LPVOID)patch_address, sizeof(patch), old_protect, &old_protect);
 }
 
 void c_cache::setup_actor()
@@ -51,10 +112,45 @@ void c_cache::setup_actor()
         0x90, 0x90, 0x90, 0x90, 0x90
     };
 
+    DWORD processId = GetProcessIdByName(L"RainbowSix.exe");
+    if (!processId) {
+        std::cout << "Process not found" << std::endl;
+        return;
+    }
+
+    HANDLE hProcess = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE,
+        FALSE, processId);
+    if (!hProcess) {
+        std::cout << "Failed to open process: " << GetLastError() << std::endl;
+        return;
+    }
+
     DWORD old_protect;
-    VirtualProtect((LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect);
-    memcpy((void*)patch_address, patch, sizeof(patch));
-    VirtualProtect((LPVOID)patch_address, sizeof(patch), old_protect, &old_protect);
+    if (!VirtualProtectEx(hProcess, (LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect)) {
+        std::cout << "VirtualProtectEx failed: " << GetLastError() << std::endl;
+        CloseHandle(hProcess);
+        return;
+    }
+
+    SIZE_T bytesWritten;
+    if (!WriteProcessMemory(hProcess, (LPVOID)patch_address, patch, sizeof(patch), &bytesWritten)) {
+        std::cout << "WriteProcessMemory failed: " << GetLastError() << std::endl;
+        CloseHandle(hProcess);
+        return;
+    }
+
+    VirtualProtectEx(hProcess, (LPVOID)patch_address, sizeof(patch), old_protect, &old_protect);
+
+    CloseHandle(hProcess);
+
+    //DWORD old_protect;
+    //VirtualProtect((LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect);
+    //if (!VirtualProtect((LPVOID)patch_address, sizeof(patch), PAGE_EXECUTE_READWRITE, &old_protect)) {
+    //    std::cout << "VirtualProtect failed: " << GetLastError() << std::endl;
+    //    return;
+    //}
+    //memcpy((void*)patch_address, patch, sizeof(patch));
+    //VirtualProtect((LPVOID)patch_address, sizeof(patch), old_protect, &old_protect);
 }
 
 void c_cache::setup_cache()
